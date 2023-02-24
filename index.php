@@ -8,6 +8,7 @@
 </head>
 <body>
     <?php
+    session_start();
     if(!$_POST){
         $number = rand(1,100);
         $attemps = 3;
@@ -19,9 +20,7 @@
     if(isset($_POST["diapazon"])){
         $attemps--;
         $diapazon = $_POST["diapazon"];
-        // if($number >= $diapazon && $number <= $diapazon+=10){
-        //     echo "You win";
-        // }
+        $_SESSION["diapazon"] = $diapazon;
     }
     ?>
     <form action="index.php" method="post">
@@ -48,13 +47,19 @@
                         echo "<h2>Ви майже відгадали</h2>";
                     }
                     echo "Правильний діапазон:";
-                    echo $diapazon-=21;
+                    $diapazonStart = $_SESSION["diapazon"];
+                    $diapazonEnd1 = $_SESSION["diapazon"]+=9;
+                    echo $diapazon-=20;
                     echo "-";
-                    echo $diapazon+=10;
-                    echo "<br><h3>Тепер виберіть число від 1 до 10</h3>";
+                    echo $diapazon+=9;
+                    echo "<br><h3>Тепер виберіть число яке загадав комп'ютер із діапазону</h3>";
                     echo "<select name='diapazon1'>";
-                    for($i = 1; $i <= 10;$i++){
-                        echo "<option value='$i'>$i</option>";
+                    for($i = $diapazonStart; $i <= $diapazonEnd1;$i++){
+                        if($i == 0){
+                            echo "<option value='$i'>10</option>";
+                        }else{
+                            echo "<option value='$i'>$i</option>";
+                        }
                     }
                     echo "</select>";
                     echo "<input type='submit'>";
@@ -63,16 +68,23 @@
                 }
             }
             if(isset($_POST["diapazon1"])){
-                for($l = $diapazon;$l <= $number;$l++){
-                    if($l == $number){
-                        echo "<h2>$l</h2>";
+                $diapazon1 = $_POST["diapazon1"];
+                if($diapazon1 === $number){
+                    echo "Ви вгадали, число було $number";
+                }else{
+                    echo $_SESSION['diapazon'];
+                    echo "<h2>$diapazon1</h2>";
+                    $diapazonSelect = $_SESSION["diapazon"];
+                    echo "<select name='diapazonEnd'>";
+                    for($i = $diapazon1; $i >= $diapazonSelect; $i++){
+                        echo "<option value='$i'>$i</option>";
                     }
+                    echo "</select>";  
                 }
             }
             ?>
         <input type="hidden" name="number" value="<?= $number ?>">
         <input type="hidden" name="attemps" value="<?= $attemps ?>">
-        <input type="hidden" name="diapazon" value="<?= $diapazon ?>">
         </form>
 </body>
 </html>
