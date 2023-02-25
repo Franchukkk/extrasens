@@ -1,0 +1,14 @@
+body{
+    background: linear-gradient(rgba(69, 84, 105, 0.80), rgba(69, 84, 105, 80%)), url(images/0dFV478FfQgb9pF0mFMwep5NOKr0NCd1.jpg) center;
+}
+
+.wrapper{
+    color: #fff;
+    max-width: 700px;
+    background-color: rgba(80, 93, 119, 0.6);
+    margin: auto;
+    padding: 40px;
+    border-radius: 15px;
+    border: 3px solid #000;
+    box-shadow: 0px 0px 5px 1px #078d12;
+}
