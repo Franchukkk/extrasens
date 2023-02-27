@@ -15,6 +15,7 @@
         session_start();
         if(!$_POST){
             $number = rand(1,100);
+            $true = floor($number/10)*10;
         }else{
             $number = $_POST["number"];
         }
@@ -31,7 +32,7 @@
                 for ($j = 0; $j < 10; $j++) { // цикл для десяти діапазонів
                     $start = $j * 10 + 1; // початок поточного діапазону
                     $end = $start + 9; // кінець поточного діапазону
-                    echo "<option value='$start'>$start - $end</option>"; // опція з діапазоном
+                    echo "<option value='$true'>$start - $end</option>"; // опція з діапазоном
                 }
             ?>
             </select>
@@ -42,16 +43,12 @@
             <form action="index.php" method="post">
                 <?php
                     if(isset($_POST["diapazon"])){
-                        if($number >= $diapazon && $number <= $diapazon+=10){
                             if($diapazon && $number <= $diapazon+=10){
-                                echo "<h2>Ви справились із першою перевіркою на екстрасенса!</h2>";
+                                echo "<h2>Ви !</h2>";
                             }
-                            echo "Правильний діапазон: ";
-                            $diapazonStart = $_SESSION["diapazon"];
+                            $diapazonStart = $_SESSION["diapazon"]+=1;
                             $diapazonEnd1 = $_SESSION["diapazon"]+=9;
-                            echo $diapazon-=20;
-                            echo "-";
-                            echo $diapazon+=9;
+                            echo "Правильний діапазон: $diapazonStart - $diapazonEnd1";
                             echo "<br><h3>Тепер виберіть число яке загадав комп'ютер із діапазону</h3>";
                             echo "<select name='diapazon1'>";
                             for($i = $diapazonStart; $i <= $diapazonEnd1;$i++){
@@ -60,7 +57,6 @@
                             echo "</select>";
                             echo "<input type='hidden' name='diapazonStart' value='$diapazonStart'>";
                             echo "<input type='submit'>";
-                        }
                     }
                 ?>
             <input type="hidden" name="number" value="<?= $number ?>">
