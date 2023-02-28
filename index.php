@@ -32,10 +32,11 @@
                 for ($j = 0; $j < 10; $j++) { // цикл для десяти діапазонів
                     $start = $j * 10 + 1; // початок поточного діапазону
                     $end = $start + 9; // кінець поточного діапазону
-                    echo "<option value='$true'>$start - $end</option>"; // опція з діапазоном
+                    echo "<option value='$start'>$start - $end</option>"; // опція з діапазоном
                 }
             ?>
             </select>
+            <input type="hidden" name="true" value="<?= $true ?>">
             <input type="hidden" name="number" value="<?= $number ?>">
             <input type="submit">
         </form>
@@ -43,19 +44,22 @@
             <form action="index.php" method="post">
                 <?php
                     if(isset($_POST["diapazon"])){
-                            if($diapazon && $number <= $diapazon+=10){
-                                echo "<h2>Ви !</h2>";
-                            }
-                            $diapazonStart = $_SESSION["diapazon"]+=1;
-                            $diapazonEnd1 = $_SESSION["diapazon"]+=9;
+                            echo "<h2>Йдемо далі !</h2>";
+                            $diapazon = $_POST["diapazon"];
+                            $number = $_POST["number"];
+                            $true = $_POST["true"];
+                            $diapazonStart = $_POST["true"]+=1;
+                            $diapazonEnd1 = $_POST["true"]+=9;
                             echo "Правильний діапазон: $diapazonStart - $diapazonEnd1";
                             echo "<br><h3>Тепер виберіть число яке загадав комп'ютер із діапазону</h3>";
                             echo "<select name='diapazon1'>";
-                            for($i = $diapazonStart; $i <= $diapazonEnd1;$i++){
+                            for($i = $diapazonStart; $i <= $diapazonEnd1; $i++){
                                 echo "<option value='$i'>$i</option>";
                             }
                             echo "</select>";
                             echo "<input type='hidden' name='diapazonStart' value='$diapazonStart'>";
+                            echo "<input type='hidden' name='true' value='$true'>";
+                            echo "<input type='hidden' name='diapazon2' value='$diapazon'>";
                             echo "<input type='submit'>";
                     }
                 ?>
@@ -64,19 +68,24 @@
                 <?php
                     if(isset($_POST["diapazon1"])){
                         $diapazon1 = $_POST["diapazon1"];
+                        $diapazon = $_POST["diapazon2"];
                         if($diapazon1 === $number){
-                            echo "<h2>Ви екстрасенс 1 рівня, число справді було $number</h2>";
-                            echo "<p><a href='index.php'>На головну</a></p>";
+                            if($number >= $_POST["diapazon2"] && $number <= $_POST["diapazon2"]+=9){
+                                echo "<h2>Ви СУПЕР-ПУПЕР екстрасенс</h2>";
+                            }else{
+                                echo "<h2>Ви екстрасенс 1 рівня, число справді було $number</h2>";
+                                echo "<p><a href='index.php'>На головну</a></p>";
+                            }
                         }else{
                             echo "Майже відгадали, у вас буде ще шанс";
                             if(isset($_POST["diapazonStart"])){
                                 $diapazonStart = $_POST["diapazonStart"];
                             }
-                            $diapazonSelect = $_SESSION["diapazon"];
+                            $diapazonSelect = $_POST["true"];
                             if($number < $diapazonStart+=5){
                                 echo "<form action='index.php' method='post'>";
                                 echo "<select name='diapazonEnd'>"; //селект номер
-                                $ggg1 = $diapazonSelect-=9;
+                                $ggg1 = $diapazonSelect+=1;
                                 $diapazonEndSelect1 = $ggg1+=4;
                                 for($i = $diapazonSelect; $i <= $diapazonEndSelect1; $i++){
                                     echo "<option value='$i'>$i</option>";
@@ -90,9 +99,10 @@
                             }else{
                                 echo "<form action='index.php' method='post'>";
                                 echo "<select name='diapazonEnd'>";//селект номер 1
-                                $ggg = $diapazonSelect;
+                                $ggg = $diapazonSelect+=11;
                                 $diapazonEndSelect = $ggg;
-                                for($i = $diapazonSelect-=5; $i <= $diapazonEndSelect; $i++){
+                                $diapazonEndSelectEn = $diapazonEndSelect+=4;
+                                for($i = $diapazonSelect-=5; $i <= $diapazonEndSelect-=1; $i++){
                                     echo "<option value='$i'>$i</option>";
                                 }
                                 echo "</select>";
@@ -138,6 +148,7 @@
                 echo "<input type='hidden' name='number' value='$number'>";
                 echo "<input type='hidden' name='diapazonSelect' value='$diapazonSelect'>";
                 echo "<input type='hidden' name='diapazonStart' value='$diapazonStart'>";
+                echo "<input type='hidden' name='checker'>";
                 echo "<input type='submit'>";
                 echo "</form>";
                 if(isset($_POST["diapazonEnd"])){
@@ -145,6 +156,8 @@
                     if($diapazonEnd == $number){
                         echo "<h2>Вітаємо, ви екстрасенс 2 рівня!</h2>";
                         echo "<a href='index.php'>На головну</a>";
+                    }else if($diapazonEnd !== $number && isset($_POST["checker"])){
+                        echo "<h2>На жаль, ви не екстрасенс</h2>";
                     }
                 }
             }else{
@@ -159,6 +172,7 @@
                 echo "<input type='hidden' name='number' value='$number'>";
                 echo "<input type='hidden' name='diapazonSelect' value='$diapazonSelect'>";
                 echo "<input type='hidden' name='diapazonStart' value='$diapazonStart'>";
+                echo "<input type='hidden' name='checker'>";
                 echo "<input type='submit'>";
                 echo "</form>";
                 if(isset($_POST["diapazonEnd"])){
@@ -166,6 +180,8 @@
                     if($diapazonEnd == $number){
                         echo "<h2>Вітаємо, ви екстрасенс 2 рівня!</h2>";
                         echo "<a href='index.php'>На головну</a>";
+                    }else if($diapazonEnd !== $number && isset($_POST["checker"])){
+                        echo "<h2>На жаль, ви не екстрасенс</h2>";
                     }
                 }
             }
